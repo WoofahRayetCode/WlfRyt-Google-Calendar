@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+build/
+*.exe
+*.dmg
+*.AppImage
+*.msi
+*.blockmap
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Electron specific
+.electron/
+*.asar
+
+# Session/Security data (NEVER commit these)
+session-data/
+*.encrypted
+*.key
+secure-storage/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Coverage and test
+coverage/
+.nyc_output/
+
+# Package lock (optional - uncomment if you prefer yarn.lock only)
+# package-lock.json

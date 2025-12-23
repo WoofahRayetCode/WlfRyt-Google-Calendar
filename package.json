@@ -1,0 +1,74 @@
+{
+  "name": "wlfryt-google-calendar",
+  "version": "2025.1223.0929",
+  "description": "Standalone Google Calendar app with persistent login and security protection",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "version": "node scripts/update-version.js",
+    "build": "npm run version && electron-builder",
+    "build:win": "npm run version && electron-builder --win",
+    "build:portable": "npm run version && electron-builder --win portable",
+    "build:mac": "npm run version && electron-builder --mac",
+    "build:linux": "npm run version && electron-builder --linux",
+    "convert-icon": "node scripts/convert-icon.js",
+    "prebuild:win": "node scripts/convert-icon.js",
+    "prebuild:portable": "node scripts/convert-icon.js"
+  },
+  "author": "WlfRyt",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.34.5"
+  },
+  "dependencies": {
+    "auto-launch": "^5.0.6",
+    "electron-store": "^8.1.0",
+    "keytar": "^7.9.0"
+  },
+  "build": {
+    "appId": "com.wlfryt.google-calendar",
+    "productName": "WlfRyt Google Calendar",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*"
+    ]
+  }
+}
