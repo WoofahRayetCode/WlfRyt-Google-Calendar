@@ -39,8 +39,21 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Setup Python (for native modules)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Windows Build Tools
+        run: npm install --global windows-build-tools --vs2015 || true
+        continue-on-error: true
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Rebuild native modules
+        run: npx electron-rebuild
+        continue-on-error: true
 
       - name: Update version to timestamp
         run: npm run version
@@ -49,14 +62,7 @@ jobs:
         run: npm run convert-icon
 
       - name: Build Windows Portable
-        if: github.event.inputs.build_type != 'installer'
         run: npm run build:portable
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Windows Installer
-        if: github.event.inputs.build_type != 'portable'
-        run: npm run build:win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -71,7 +77,6 @@ jobs:
 
   build-mac:
     runs-on: macos-latest
-    if: github.event.inputs.build_type == 'all' || github.event.inputs.build_type == ''
     env:
       # CPU optimization for parallel builds
       UV_THREADPOOL_SIZE: 3
@@ -89,8 +94,17 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Setup Python (for native modules)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Rebuild native modules
+        run: npx electron-rebuild
+        continue-on-error: true
 
       - name: Build macOS
         run: npm run build:mac
@@ -106,7 +120,6 @@ jobs:
 
   build-linux:
     runs-on: ubuntu-latest
-    if: github.event.inputs.build_type == 'all' || github.event.inputs.build_type == ''
     env:
       # CPU optimization for parallel builds
       UV_THREADPOOL_SIZE: 4
@@ -124,8 +137,22 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Setup Python (for native modules)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsecret-1-dev libgnome-keyring-dev
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Rebuild native modules
+        run: npx electron-rebuild
+        continue-on-error: true
 
       - name: Build Linux
         run: npm run build:linux
@@ -170,5 +197,4 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
